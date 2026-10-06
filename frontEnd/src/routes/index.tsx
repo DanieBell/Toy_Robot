@@ -4,6 +4,7 @@ import { CommandInput } from "../components/CommandInput";
 import { Modal } from "../components/Modal";
 import { PlaceRobotForm } from "../components/PlaceRobotForm";
 import { RobotControls } from "../components/RobotControls";
+import { SandboxList } from "../components/SandboxList";
 import { TableGrid } from "../components/TableGrid";
 import { useSandbox } from "../context/SandboxContext";
 import type { Direction } from "../types/sandbox";
@@ -41,10 +42,8 @@ function SandboxPage() {
 
   if (!sandbox) {
     return (
-      <div className={styles.empty}>
-        <p>
-          No sandbox yet. Use "Create Sandbox" in the top right to get started.
-        </p>
+      <div className={styles.landing}>
+        <SandboxList />
       </div>
     );
   }

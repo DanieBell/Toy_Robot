@@ -1,0 +1,146 @@
+.message {
+  text-align: center;
+  color: var(--text, #666);
+}
+
+.table {
+  width: 100%;
+  max-width: 40rem;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.caption {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border, #e5e4e7);
+}
+
+.table th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text, #666);
+}
+
+.actionsHeader {
+  text-align: right;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.enterButton {
+  padding: 0.35rem 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: #333;
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.enterButton:hover {
+  background: #555;
+}
+
+.deleteButton {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  background: transparent;
+  color: #c0392b;
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #c0392b;
+  color: #fff;
+}
+
+.deleteButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.confirmText {
+  margin: 0;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancelButton,
+.confirmDeleteButton {
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cancelButton {
+  border: 1px solid #999;
+  background: transparent;
+  color: inherit;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.confirmDeleteButton {
+  border: none;
+  background: #c0392b;
+  color: #fff;
+}
+
+.confirmDeleteButton:hover:not(:disabled) {
+  background: #a93226;
+}
+
+.cancelButton:disabled,
+.confirmDeleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .table th,
+  .table td {
+    border-color: #333;
+  }
+
+  .cancelButton:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .enterButton {
+    background: #e0e0e0;
+    color: #1e1e1e;
+  }
+
+  .enterButton:hover {
+    background: #fff;
+  }
+}

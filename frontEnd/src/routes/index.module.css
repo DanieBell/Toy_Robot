@@ -33,3 +33,9 @@
   display: flex;
   justify-content: center;
 }
+
+.landing {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}

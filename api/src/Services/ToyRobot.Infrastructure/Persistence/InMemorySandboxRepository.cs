@@ -17,4 +17,14 @@ public class InMemorySandboxRepository : ISandboxRepository
     {
         return _sandboxes.TryGetValue(id, out var sandbox) ? sandbox : null;
     }
+
+    public IReadOnlyList<Sandbox> GetAll()
+    {
+        return _sandboxes.Values.ToList();
+    }
+
+    public bool Remove(Guid id)
+    {
+        return _sandboxes.TryRemove(id, out _);
+    }
 }

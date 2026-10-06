@@ -27,6 +27,29 @@ public class SandboxController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = sandbox.Id }, response);
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(IReadOnlyList<SandboxResponse>), StatusCodes.Status200OK)]
+    public ActionResult<IReadOnlyList<SandboxResponse>> GetAll()
+    {
+        var sandboxes = _repository.GetAll()
+            .Select(SandboxResponse.FromDomain)
+            .ToList();
+
+        return Ok(sandboxes);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult Delete(Guid id)
+    {
+        var removed = _repository.Remove(id);
+        if (!removed)
+            return NotFound();
+
+        return NoContent();
+    }
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SandboxResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

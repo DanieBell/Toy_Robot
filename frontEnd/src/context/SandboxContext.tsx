@@ -1,14 +1,17 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { Direction, Sandbox } from "../types/sandbox";
 import { useCreateSandbox } from "../hooks/useCreateSandbox";
 import { usePlaceRobot } from "../hooks/usePlaceRobot";
 import { useMoveRobot } from "../hooks/useMoveRobot";
 import { useTurnRobotLeft, useTurnRobotRight } from "../hooks/useTurnRobot";
+import { sandboxListQueryKey } from "../hooks/useSandboxList";
 
 interface SandboxContextValue {
   sandbox: Sandbox | null;
   createSandbox: (width: number, height: number) => Promise<void>;
+  selectSandbox: (sandbox: Sandbox) => void;
   placeRobot: (x: number, y: number, facing: Direction) => Promise<void>;
   moveRobot: () => Promise<void>;
   turnLeft: () => Promise<void>;
@@ -28,6 +31,7 @@ const SandboxContext = createContext<SandboxContextValue | null>(null);
 
 export function SandboxProvider({ children }: { children: ReactNode }) {
   const [sandbox, setSandbox] = useState<Sandbox | null>(null);
+  const queryClient = useQueryClient();
   const createMutation = useCreateSandbox();
   const placeMutation = usePlaceRobot();
   const moveMutation = useMoveRobot();
@@ -39,7 +43,12 @@ export function SandboxProvider({ children }: { children: ReactNode }) {
       tableWidth: width,
       tableHeight: height,
     });
+    queryClient.invalidateQueries({ queryKey: sandboxListQueryKey });
     setSandbox(created);
+  }
+
+  function selectSandbox(selected: Sandbox) {
+    setSandbox(selected);
   }
 
   async function placeRobot(x: number, y: number, facing: Direction) {
@@ -93,6 +102,7 @@ export function SandboxProvider({ children }: { children: ReactNode }) {
       value={{
         sandbox,
         createSandbox,
+        selectSandbox,
         placeRobot,
         moveRobot,
         turnLeft,
