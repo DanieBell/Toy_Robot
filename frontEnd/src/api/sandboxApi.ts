@@ -1,25 +1,11 @@
 import type { Sandbox } from "../types/sandbox";
+import type {
+  CreateSandboxParams,
+  PlaceRobotParams,
+  SandboxApiResponse,
+} from "./types";
 
 const API_BASE_URL = "http://localhost:5299";
-
-interface CreateSandboxParams {
-  tableWidth: number;
-  tableHeight: number;
-}
-
-interface SandboxApiResponse {
-  id: string;
-  table: {
-    width: number;
-    height: number;
-  };
-  robot: {
-    isPlaced: boolean;
-    x: number | null;
-    y: number | null;
-    facing: string | null;
-  };
-}
 
 function mapResponseToSandbox(response: SandboxApiResponse): Sandbox {
   return {
@@ -51,6 +37,31 @@ export async function createSandboxApi(
     throw new Error(
       `Failed to create sandbox: ${response.status} ${errorBody}`,
     );
+  }
+
+  const data: SandboxApiResponse = await response.json();
+  return mapResponseToSandbox(data);
+}
+
+export async function placeRobotApi(
+  params: PlaceRobotParams,
+): Promise<Sandbox> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        x: params.x,
+        y: params.y,
+        facing: params.facing,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Failed to place robot: ${response.status} ${errorBody}`);
   }
 
   const data: SandboxApiResponse = await response.json();

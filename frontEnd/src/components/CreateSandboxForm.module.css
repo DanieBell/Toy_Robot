@@ -69,6 +69,11 @@
   font-size: 0.875rem;
 }
 
+.fieldError {
+  color: #c00;
+  font-size: 0.75rem;
+}
+
 .primary:disabled,
 .secondary:disabled {
   opacity: 0.6;

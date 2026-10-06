@@ -38,4 +38,27 @@ public class SandboxController : ControllerBase
 
         return Ok(SandboxResponse.FromDomain(sandbox));
     }
+
+    [HttpPost("{id:guid}/robot")]
+    [ProducesResponseType(typeof(SandboxResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<SandboxResponse> PlaceRobot(Guid id, [FromBody] PlaceRobotRequest request)
+    {
+        var sandbox = _repository.GetById(id);
+        if (sandbox is null)
+            return NotFound();
+
+        try
+        {
+            sandbox.PlaceRobot(request.X, request.Y, request.Facing);
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(request.X), ex.Message);
+            return ValidationProblem(ModelState);
+        }
+
+        return Ok(SandboxResponse.FromDomain(sandbox));
+    }
 }

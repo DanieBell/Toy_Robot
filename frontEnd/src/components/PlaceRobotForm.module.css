@@ -1,0 +1,121 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.position {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.legend {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.directionButton {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.directionButton:hover {
+  border-color: #888;
+}
+
+.directionButton.selected {
+  border-color: #333;
+  background: #333;
+  color: #fff;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.primary,
+.secondary {
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.primary {
+  border: none;
+  background: #333;
+  color: #fff;
+}
+
+.primary:hover:not(:disabled) {
+  background: #555;
+}
+
+.primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.secondary {
+  border: 1px solid #999;
+  background: transparent;
+  color: inherit;
+}
+
+.secondary:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.error {
+  margin: 0;
+  color: #c00;
+  font-size: 0.875rem;
+}
+
+.directionButton:disabled,
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .position {
+    color: #aaa;
+  }
+
+  .directionButton {
+    border-color: #555;
+  }
+
+  .directionButton:hover {
+    border-color: #999;
+  }
+
+  .directionButton.selected {
+    border-color: #e0e0e0;
+    background: #e0e0e0;
+    color: #1e1e1e;
+  }
+}

@@ -14,6 +14,14 @@
   justify-content: center;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background: #e3e8f0;
+}
+
 .occupied {
   background: #e8f5e9;
 }
@@ -30,5 +38,9 @@
 
   .occupied {
     background: #1b3a1b;
+  }
+
+  .clickable:hover {
+    background: #3a3f4a;
   }
 }

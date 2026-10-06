@@ -9,6 +9,12 @@ interface CreateSandboxFormProps {
 }
 
 const DEFAULT_SIZE = 5;
+const MIN_SIZE = 1;
+const MAX_SIZE = 100;
+
+function isValidSize(value: number): boolean {
+  return Number.isInteger(value) && value >= MIN_SIZE && value <= MAX_SIZE;
+}
 
 export function CreateSandboxForm({
   onCreate,
@@ -19,9 +25,11 @@ export function CreateSandboxForm({
   const [width, setWidth] = useState(DEFAULT_SIZE);
   const [height, setHeight] = useState(DEFAULT_SIZE);
 
+  const isValid = isValidSize(width) && isValidSize(height);
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (width >= 1 && height >= 1) {
+    if (isValid) {
       onCreate(width, height);
     }
   }
@@ -34,24 +42,34 @@ export function CreateSandboxForm({
           <input
             id="table-width"
             type="number"
-            min={1}
-            max={100}
+            min={MIN_SIZE}
+            max={MAX_SIZE}
             value={width}
             onChange={(e) => setWidth(Number(e.target.value))}
             disabled={isSubmitting}
           />
+          {!isValidSize(width) && (
+            <span className={styles.fieldError} role="alert">
+              Must be {MIN_SIZE}–{MAX_SIZE}
+            </span>
+          )}
         </div>
         <div className={styles.field}>
           <label htmlFor="table-height">Height</label>
           <input
             id="table-height"
             type="number"
-            min={1}
-            max={100}
+            min={MIN_SIZE}
+            max={MAX_SIZE}
             value={height}
             onChange={(e) => setHeight(Number(e.target.value))}
             disabled={isSubmitting}
           />
+          {!isValidSize(height) && (
+            <span className={styles.fieldError} role="alert">
+              Must be {MIN_SIZE}–{MAX_SIZE}
+            </span>
+          )}
         </div>
       </div>
       {error && (
@@ -71,7 +89,7 @@ export function CreateSandboxForm({
         <button
           type="submit"
           className={styles.primary}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Creating\u2026" : "Create"}
         </button>

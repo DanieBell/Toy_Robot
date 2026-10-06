@@ -1,5 +1,12 @@
 export type Direction = "North" | "East" | "South" | "West";
 
+export const DIRECTIONS: readonly Direction[] = [
+  "North",
+  "East",
+  "South",
+  "West",
+];
+
 export interface Table {
   width: number;
   height: number;

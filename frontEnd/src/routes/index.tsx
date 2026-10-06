@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { CommandInput } from "../components/CommandInput";
+import { Modal } from "../components/Modal";
+import { PlaceRobotForm } from "../components/PlaceRobotForm";
 import { TableGrid } from "../components/TableGrid";
 import { useSandbox } from "../context/SandboxContext";
+import type { Direction } from "../types/sandbox";
 import styles from "./index.module.css";
 
 export const Route = createFileRoute("/")({
@@ -8,13 +13,36 @@ export const Route = createFileRoute("/")({
 });
 
 function SandboxPage() {
-  const { sandbox } = useSandbox();
+  const { sandbox, placeRobot, isPlacing, placeError } = useSandbox();
+  const [pendingCell, setPendingCell] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
+  function handleCellClick(x: number, y: number) {
+    setPendingCell({ x, y });
+  }
+
+  async function handleConfirm(facing: Direction) {
+    if (!pendingCell) return;
+
+    try {
+      await placeRobot(pendingCell.x, pendingCell.y, facing);
+      setPendingCell(null);
+    } catch {
+      // error surfaced via placeError
+    }
+  }
+
+  function handleCancel() {
+    setPendingCell(null);
+  }
 
   if (!sandbox) {
     return (
       <div className={styles.empty}>
         <p>
-          No sandbox yet. Use “Create Sandbox” in the top right to get started.
+          No sandbox yet. Use "Create Sandbox" in the top right to get started.
         </p>
       </div>
     );
@@ -26,8 +54,33 @@ function SandboxPage() {
         Sandbox ({sandbox.table.width}×{sandbox.table.height})
       </h1>
       <div className={styles.gridContainer}>
-        <TableGrid table={sandbox.table} robot={sandbox.robot} />
+        <TableGrid
+          table={sandbox.table}
+          robot={sandbox.robot}
+          onCellClick={handleCellClick}
+        />
       </div>
+
+      <div className={styles.commandContainer}>
+        <CommandInput onPlace={placeRobot} />
+      </div>
+
+      <Modal
+        open={pendingCell != null}
+        title="Place Robot"
+        onClose={handleCancel}
+      >
+        {pendingCell && (
+          <PlaceRobotForm
+            x={pendingCell.x}
+            y={pendingCell.y}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+            isSubmitting={isPlacing}
+            error={placeError}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
