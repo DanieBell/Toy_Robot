@@ -10,7 +10,7 @@ interface CreateSandboxFormProps {
 
 const DEFAULT_SIZE = 5;
 const MIN_SIZE = 1;
-const MAX_SIZE = 20;
+const MAX_SIZE = 10;
 
 function isValidSize(value: number): boolean {
   return Number.isInteger(value) && value >= MIN_SIZE && value <= MAX_SIZE;

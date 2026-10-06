@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { ActionLog } from "../components/ActionLog";
 import { CommandInput } from "../components/CommandInput";
 import { Modal } from "../components/Modal";
 import { PlaceRobotForm } from "../components/PlaceRobotForm";
@@ -61,12 +62,15 @@ function SandboxPage() {
         <CommandInput />
       </div>
 
-      <div className={styles.gridContainer}>
-        <TableGrid
-          table={sandbox.table}
-          robot={sandbox.robot}
-          onCellClick={handleCellClick}
-        />
+      <div className={styles.workspace}>
+        <ActionLog entries={sandbox.log} />
+        <div className={styles.gridContainer}>
+          <TableGrid
+            table={sandbox.table}
+            robot={sandbox.robot}
+            onCellClick={handleCellClick}
+          />
+        </div>
       </div>
 
       <Modal

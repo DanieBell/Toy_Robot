@@ -23,4 +23,5 @@ export interface Sandbox {
   id: string;
   table: Table;
   robot: Robot;
+  log: string[];
 }

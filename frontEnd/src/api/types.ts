@@ -32,4 +32,5 @@ export interface SandboxApiResponse {
     y: number | null;
     facing: string | null;
   };
+  log: string[];
 }

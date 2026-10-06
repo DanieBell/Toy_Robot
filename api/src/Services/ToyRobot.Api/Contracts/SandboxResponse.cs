@@ -2,13 +2,18 @@ using ToyRobot.Domain;
 
 namespace ToyRobot.Api.Contracts;
 
-public record SandboxResponse(Guid Id, TableDto Table, RobotDto Robot)
+public record SandboxResponse(
+    Guid Id,
+    TableDto Table,
+    RobotDto Robot,
+    IReadOnlyList<string> Log)
 {
     public static SandboxResponse FromDomain(Sandbox sandbox) =>
         new(
             sandbox.Id,
             new TableDto(sandbox.Table.Width, sandbox.Table.Height),
-            RobotDto.FromDomain(sandbox.Robot));
+            RobotDto.FromDomain(sandbox.Robot),
+            sandbox.Log);
 }
 
 public record TableDto(int Width, int Height);

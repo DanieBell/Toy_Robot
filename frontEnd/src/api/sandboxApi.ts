@@ -22,6 +22,7 @@ function mapResponseToSandbox(response: SandboxApiResponse): Sandbox {
       y: response.robot.y,
       facing: response.robot.facing as Sandbox["robot"]["facing"],
     },
+    log: response.log ?? [],
   };
 }
 

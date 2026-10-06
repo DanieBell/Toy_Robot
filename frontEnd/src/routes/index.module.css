@@ -28,10 +28,18 @@
   justify-content: center;
 }
 
-.gridContainer {
+.workspace {
   margin-top: 1.5rem;
   display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
   justify-content: center;
+}
+
+.gridContainer {
+  display: flex;
+  justify-content: center;
+  align-self: flex-start;
 }
 
 .landing {
