@@ -1,0 +1,23 @@
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: var(--text, #666);
+  text-align: center;
+}
+
+.sandbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin: 0 0 1.5rem;
+}
+
+.gridContainer {
+  display: flex;
+  justify-content: center;
+}

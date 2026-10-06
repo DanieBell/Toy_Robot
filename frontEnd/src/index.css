@@ -1,0 +1,21 @@
+:root {
+  --border: #e5e4e7;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --border: #3a3a3a;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
