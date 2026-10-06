@@ -1,0 +1,31 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: toyrobot-api
+    container_name: toyrobot-api
+    ports:
+      - "5299:5299"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5299
+
+  frontend:
+    build:
+      context: ./frontEnd
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5299
+      secrets:
+        - artifactory_token
+    image: toyrobot-frontend
+    container_name: toyrobot-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+secrets:
+  artifactory_token:
+    environment: ARTIFACTORY_ACCESS_TOKEN

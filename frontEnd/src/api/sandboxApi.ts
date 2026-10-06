@@ -7,7 +7,8 @@ import type {
   SandboxApiResponse,
 } from "./types";
 
-const API_BASE_URL = "http://localhost:5299";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5299";
 
 function mapResponseToSandbox(response: SandboxApiResponse): Sandbox {
   return {
