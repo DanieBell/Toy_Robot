@@ -61,4 +61,73 @@ public class SandboxController : ControllerBase
 
         return Ok(SandboxResponse.FromDomain(sandbox));
     }
+
+    [HttpPost("{id:guid}/robot/move")]
+    [ProducesResponseType(typeof(SandboxResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<SandboxResponse> MoveRobot(Guid id)
+    {
+        var sandbox = _repository.GetById(id);
+        if (sandbox is null)
+            return NotFound();
+
+        try
+        {
+            sandbox.MoveRobot();
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("move", ex.Message);
+            return ValidationProblem(ModelState);
+        }
+
+        return Ok(SandboxResponse.FromDomain(sandbox));
+    }
+
+    [HttpPost("{id:guid}/robot/left")]
+    [ProducesResponseType(typeof(SandboxResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<SandboxResponse> TurnRobotLeft(Guid id)
+    {
+        var sandbox = _repository.GetById(id);
+        if (sandbox is null)
+            return NotFound();
+
+        try
+        {
+            sandbox.TurnRobotLeft();
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("turn", ex.Message);
+            return ValidationProblem(ModelState);
+        }
+
+        return Ok(SandboxResponse.FromDomain(sandbox));
+    }
+
+    [HttpPost("{id:guid}/robot/right")]
+    [ProducesResponseType(typeof(SandboxResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<SandboxResponse> TurnRobotRight(Guid id)
+    {
+        var sandbox = _repository.GetById(id);
+        if (sandbox is null)
+            return NotFound();
+
+        try
+        {
+            sandbox.TurnRobotRight();
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("turn", ex.Message);
+            return ValidationProblem(ModelState);
+        }
+
+        return Ok(SandboxResponse.FromDomain(sandbox));
+    }
 }

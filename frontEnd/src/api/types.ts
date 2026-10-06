@@ -10,6 +10,16 @@ export interface PlaceRobotParams {
   facing: string;
 }
 
+export interface RobotActionParams {
+  sandboxId: string;
+}
+
+export interface ErrorDetails {
+  title?: string;
+  detail?: string;
+  errors?: Record<string, string[]>;
+}
+
 export interface SandboxApiResponse {
   id: string;
   table: {

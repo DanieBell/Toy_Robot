@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CommandInput } from "../components/CommandInput";
 import { Modal } from "../components/Modal";
 import { PlaceRobotForm } from "../components/PlaceRobotForm";
+import { RobotControls } from "../components/RobotControls";
 import { TableGrid } from "../components/TableGrid";
 import { useSandbox } from "../context/SandboxContext";
 import type { Direction } from "../types/sandbox";
@@ -53,16 +54,20 @@ function SandboxPage() {
       <h1 className={styles.title}>
         Sandbox ({sandbox.table.width}×{sandbox.table.height})
       </h1>
+      <div className={styles.controlsContainer}>
+        <RobotControls robot={sandbox.robot} />
+      </div>
+
+      <div className={styles.commandContainer}>
+        <CommandInput />
+      </div>
+
       <div className={styles.gridContainer}>
         <TableGrid
           table={sandbox.table}
           robot={sandbox.robot}
           onCellClick={handleCellClick}
         />
-      </div>
-
-      <div className={styles.commandContainer}>
-        <CommandInput onPlace={placeRobot} />
       </div>
 
       <Modal

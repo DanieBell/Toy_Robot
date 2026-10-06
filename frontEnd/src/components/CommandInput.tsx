@@ -1,35 +1,62 @@
 import { useState } from "react";
-import type { Direction } from "../types/sandbox";
-import { parsePlaceCommand } from "../utils/parsePlaceCommand";
+import { useSandbox } from "../context/SandboxContext";
+import { useToast } from "../context/ToastContext";
+import { formatReport } from "../utils/formatReport";
+import { parseCommand } from "../utils/parseCommand";
 import styles from "./CommandInput.module.css";
 
-interface CommandInputProps {
-  onPlace: (x: number, y: number, facing: Direction) => Promise<void>;
-  disabled?: boolean;
-}
-
-export function CommandInput({ onPlace, disabled = false }: CommandInputProps) {
+export function CommandInput() {
+  const { sandbox, placeRobot, moveRobot, turnLeft, turnRight } = useSandbox();
+  const { showToast } = useToast();
   const [value, setValue] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
 
-    const result = parsePlaceCommand(value);
+    if (isSubmitting) {
+      return;
+    }
+
+    const result = parseCommand(value);
 
     if (!result.success) {
-      setError(result.error);
+      showToast(result.error);
+      setValue("");
+      return;
+    }
+
+    const command = result.command;
+
+    if (command.type === "report") {
+      if (!sandbox?.robot.isPlaced) {
+        showToast("Place the robot before reporting.");
+        return;
+      }
+      showToast(formatReport(sandbox.robot), "info");
+      setValue("");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await onPlace(result.command.x, result.command.y, result.command.facing);
+      switch (command.type) {
+        case "place":
+          await placeRobot(command.x, command.y, command.facing);
+          break;
+        case "move":
+          await moveRobot();
+          break;
+        case "left":
+          await turnLeft();
+          break;
+        case "right":
+          await turnRight();
+          break;
+      }
       setValue("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to place robot.");
+      showToast(err instanceof Error ? err.message : "Command failed.");
     } finally {
       setIsSubmitting(false);
     }
@@ -45,25 +72,19 @@ export function CommandInput({ onPlace, disabled = false }: CommandInputProps) {
           id="command-input"
           type="text"
           className={styles.input}
-          placeholder="PLACE X,Y,DIRECTION"
+          placeholder="PLACE X,Y,DIRECTION | MOVE | LEFT | RIGHT | REPORT"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          disabled={disabled || isSubmitting}
           autoComplete="off"
         />
         <button
           type="submit"
           className={styles.button}
-          disabled={disabled || isSubmitting || value.trim() === ""}
+          disabled={isSubmitting || value.trim() === ""}
         >
           {isSubmitting ? "Sending\u2026" : "Run"}
         </button>
       </div>
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
     </form>
   );
 }

@@ -14,15 +14,21 @@
 }
 
 .title {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
 }
 
-.gridContainer {
+.controlsContainer {
   display: flex;
   justify-content: center;
 }
 
 .commandContainer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.gridContainer {
   margin-top: 1.5rem;
   display: flex;
   justify-content: center;

@@ -30,4 +30,34 @@ public class Sandbox
 
         Robot.Place(position, facing);
     }
+
+    public void MoveRobot()
+    {
+        if (!Robot.IsPlaced)
+            throw new InvalidOperationException("Robot must be placed before it can move.");
+
+        var next = Robot.NextPosition();
+
+        if (!Table.IsInBounds(next))
+            throw new InvalidOperationException(
+                $"Moving would take the robot off the {Table.Width}x{Table.Height} table.");
+
+        Robot.MoveTo(next);
+    }
+
+    public void TurnRobotLeft()
+    {
+        if (!Robot.IsPlaced)
+            throw new InvalidOperationException("Robot must be placed before it can turn.");
+
+        Robot.TurnLeft();
+    }
+
+    public void TurnRobotRight()
+    {
+        if (!Robot.IsPlaced)
+            throw new InvalidOperationException("Robot must be placed before it can turn.");
+
+        Robot.TurnRight();
+    }
 }

@@ -1,7 +1,9 @@
 import type { Sandbox } from "../types/sandbox";
+import { readErrorMessage } from "./errors";
 import type {
   CreateSandboxParams,
   PlaceRobotParams,
+  RobotActionParams,
   SandboxApiResponse,
 } from "./types";
 
@@ -33,9 +35,8 @@ export async function createSandboxApi(
   });
 
   if (!response.ok) {
-    const errorBody = await response.text();
     throw new Error(
-      `Failed to create sandbox: ${response.status} ${errorBody}`,
+      await readErrorMessage(response, "Failed to create sandbox."),
     );
   }
 
@@ -60,8 +61,55 @@ export async function placeRobotApi(
   );
 
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Failed to place robot: ${response.status} ${errorBody}`);
+    throw new Error(await readErrorMessage(response, "Failed to place robot."));
+  }
+
+  const data: SandboxApiResponse = await response.json();
+  return mapResponseToSandbox(data);
+}
+
+export async function moveRobotApi(
+  params: RobotActionParams,
+): Promise<Sandbox> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/move`,
+    { method: "POST" },
+  );
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, "Failed to move robot."));
+  }
+
+  const data: SandboxApiResponse = await response.json();
+  return mapResponseToSandbox(data);
+}
+
+export async function turnRobotLeftApi(
+  params: RobotActionParams,
+): Promise<Sandbox> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/left`,
+    { method: "POST" },
+  );
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, "Failed to turn robot."));
+  }
+
+  const data: SandboxApiResponse = await response.json();
+  return mapResponseToSandbox(data);
+}
+
+export async function turnRobotRightApi(
+  params: RobotActionParams,
+): Promise<Sandbox> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/right`,
+    { method: "POST" },
+  );
+
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response, "Failed to turn robot."));
   }
 
   const data: SandboxApiResponse = await response.json();

@@ -13,11 +13,11 @@ public class Table
 
     public static Table Create(int width, int height)
     {
-        if (width < 1)
-            throw new ArgumentOutOfRangeException(nameof(width), "Table width must be at least 1.");
+        if (width < 1 || width > 20)
+            throw new ArgumentOutOfRangeException(nameof(width), "Table width must be between 1 and 20.");
 
-        if (height < 1)
-            throw new ArgumentOutOfRangeException(nameof(height), "Table height must be at least 1.");
+        if (height < 1 || height > 20)
+            throw new ArgumentOutOfRangeException(nameof(height), "Table height must be between 1 and 20.");
 
         return new Table(width, height);
     }
