@@ -2,6 +2,25 @@ COMPOSE ?= docker compose
 
 .PHONY: up down build rebuild logs ps check-token
 
+ifeq ($(OS),Windows_NT)
+
+## Fail fast if the Artifactory token needed for the frontend build is missing
+check-token:
+	@if "$(ARTIFACTORY_ACCESS_TOKEN)"=="" ( \
+		echo ERROR: ARTIFACTORY_ACCESS_TOKEN is not set. && \
+		echo The frontend image restores npm packages from the Artifactory feed and needs this token. && \
+		echo Set it before building, e.g.:  set ARTIFACTORY_ACCESS_TOKEN=^<your-access-token^> && \
+		exit 1 \
+	)
+
+## Build images and start the API and frontend containers
+up: check-token
+	$(COMPOSE) up --build -d
+	@echo Frontend: http://localhost:5173
+	@echo API:      http://localhost:5299
+
+else
+
 ## Fail fast if the Artifactory token needed for the frontend build is missing
 check-token:
 	@if [ -z "$$ARTIFACTORY_ACCESS_TOKEN" ]; then \
@@ -17,6 +36,8 @@ up: check-token
 	$(COMPOSE) up --build -d
 	@echo "Frontend: http://localhost:5173"
 	@echo "API:      http://localhost:5299"
+
+endif
 
 ## Stop and remove the containers
 down:
