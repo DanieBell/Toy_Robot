@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useSandbox } from "../context/SandboxContext";
-import { useToast } from "../context/ToastContext";
-import { formatReport } from "../utils/formatReport";
+import { useRobotActions } from "../hooks/useRobotActions";
 import { parseCommand } from "../utils/parseCommand";
 import styles from "./CommandInput.module.css";
 
 export function CommandInput() {
-  const { sandbox, placeRobot, moveRobot, turnLeft, turnRight } = useSandbox();
-  const { showToast } = useToast();
+  const { place, move, left, right, report, showToast } = useRobotActions();
   const [value, setValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,22 +16,17 @@ export function CommandInput() {
     }
 
     const result = parseCommand(value);
+    setValue("");
 
     if (!result.success) {
       showToast(result.error);
-      setValue("");
       return;
     }
 
     const command = result.command;
 
     if (command.type === "report") {
-      if (!sandbox?.robot.isPlaced) {
-        showToast("Place the robot before reporting.");
-        return;
-      }
-      showToast(formatReport(sandbox.robot), "info");
-      setValue("");
+      report();
       return;
     }
 
@@ -42,21 +34,18 @@ export function CommandInput() {
     try {
       switch (command.type) {
         case "place":
-          await placeRobot(command.x, command.y, command.facing);
+          await place(command.x, command.y, command.facing);
           break;
         case "move":
-          await moveRobot();
+          await move();
           break;
         case "left":
-          await turnLeft();
+          await left();
           break;
         case "right":
-          await turnRight();
+          await right();
           break;
       }
-      setValue("");
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Command failed.");
     } finally {
       setIsSubmitting(false);
     }

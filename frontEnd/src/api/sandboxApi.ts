@@ -10,6 +10,8 @@ import type {
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5299";
 
+const SANDBOX_URL = `${API_BASE_URL}/api/v1/Sandbox`;
+
 function mapResponseToSandbox(response: SandboxApiResponse): Sandbox {
   return {
     id: response.id,
@@ -28,7 +30,7 @@ function mapResponseToSandbox(response: SandboxApiResponse): Sandbox {
 }
 
 export async function getSandboxesApi(): Promise<Sandbox[]> {
-  const response = await fetch(`${API_BASE_URL}/api/Sandbox`, {
+  const response = await fetch(SANDBOX_URL, {
     method: "GET",
   });
 
@@ -43,7 +45,7 @@ export async function getSandboxesApi(): Promise<Sandbox[]> {
 }
 
 export async function deleteSandboxApi(id: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/api/Sandbox/${id}`, {
+  const response = await fetch(`${SANDBOX_URL}/${id}`, {
     method: "DELETE",
   });
 
@@ -57,7 +59,7 @@ export async function deleteSandboxApi(id: string): Promise<void> {
 export async function createSandboxApi(
   params: CreateSandboxParams,
 ): Promise<Sandbox> {
-  const response = await fetch(`${API_BASE_URL}/api/Sandbox`, {
+  const response = await fetch(SANDBOX_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
@@ -76,18 +78,15 @@ export async function createSandboxApi(
 export async function placeRobotApi(
   params: PlaceRobotParams,
 ): Promise<Sandbox> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        x: params.x,
-        y: params.y,
-        facing: params.facing,
-      }),
-    },
-  );
+  const response = await fetch(`${SANDBOX_URL}/${params.sandboxId}/robot`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      x: params.x,
+      y: params.y,
+      facing: params.facing,
+    }),
+  });
 
   if (!response.ok) {
     throw new Error(await readErrorMessage(response, "Failed to place robot."));
@@ -101,8 +100,10 @@ export async function moveRobotApi(
   params: RobotActionParams,
 ): Promise<Sandbox> {
   const response = await fetch(
-    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/move`,
-    { method: "POST" },
+    `${SANDBOX_URL}/${params.sandboxId}/robot/move`,
+    {
+      method: "POST",
+    },
   );
 
   if (!response.ok) {
@@ -117,8 +118,10 @@ export async function turnRobotLeftApi(
   params: RobotActionParams,
 ): Promise<Sandbox> {
   const response = await fetch(
-    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/left`,
-    { method: "POST" },
+    `${SANDBOX_URL}/${params.sandboxId}/robot/left`,
+    {
+      method: "POST",
+    },
   );
 
   if (!response.ok) {
@@ -133,7 +136,7 @@ export async function turnRobotRightApi(
   params: RobotActionParams,
 ): Promise<Sandbox> {
   const response = await fetch(
-    `${API_BASE_URL}/api/Sandbox/${params.sandboxId}/robot/right`,
+    `${SANDBOX_URL}/${params.sandboxId}/robot/right`,
     { method: "POST" },
   );
 

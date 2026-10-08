@@ -5,7 +5,7 @@ using ToyRobot.Domain;
 namespace ToyRobot.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 public class SandboxController : ControllerBase
 {
     private readonly ISandboxRepository _repository;

@@ -1,7 +1,5 @@
-import { useSandbox } from "../context/SandboxContext";
-import { useToast } from "../context/ToastContext";
+import { useRobotActions } from "../hooks/useRobotActions";
 import type { Robot } from "../types/sandbox";
-import { formatReport } from "../utils/formatReport";
 import styles from "./RobotControls.module.css";
 
 interface RobotControlsProps {
@@ -9,42 +7,9 @@ interface RobotControlsProps {
 }
 
 export function RobotControls({ robot }: RobotControlsProps) {
-  const { moveRobot, turnLeft, turnRight, isMoving, isTurning } = useSandbox();
-  const { showToast } = useToast();
+  const { move, left, right, report, isBusy } = useRobotActions();
 
-  const disabled = !robot.isPlaced;
-  const busy = isMoving || isTurning;
-
-  async function handleMove() {
-    try {
-      await moveRobot();
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Move failed.");
-    }
-  }
-
-  async function handleLeft() {
-    try {
-      await turnLeft();
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Turn failed.");
-    }
-  }
-
-  async function handleRight() {
-    try {
-      await turnRight();
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Turn failed.");
-    }
-  }
-
-  function handleReport() {
-    if (!robot.isPlaced) {
-      return;
-    }
-    showToast(formatReport(robot), "info");
-  }
+  const disabled = !robot.isPlaced || isBusy;
 
   return (
     <div className={styles.controls}>
@@ -52,32 +17,32 @@ export function RobotControls({ robot }: RobotControlsProps) {
         <button
           type="button"
           className={styles.button}
-          onClick={handleMove}
-          disabled={disabled || busy}
+          onClick={move}
+          disabled={disabled}
         >
-          {isMoving ? "Moving\u2026" : "Move"}
+          {isBusy ? "Working\u2026" : "Move"}
         </button>
         <button
           type="button"
           className={styles.button}
-          onClick={handleLeft}
-          disabled={disabled || busy}
+          onClick={left}
+          disabled={disabled}
         >
           Left
         </button>
         <button
           type="button"
           className={styles.button}
-          onClick={handleRight}
-          disabled={disabled || busy}
+          onClick={right}
+          disabled={disabled}
         >
           Right
         </button>
         <button
           type="button"
           className={styles.button}
-          onClick={handleReport}
-          disabled={disabled || busy}
+          onClick={report}
+          disabled={!robot.isPlaced || isBusy}
         >
           Report
         </button>
