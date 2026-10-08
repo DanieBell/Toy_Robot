@@ -1,6 +1,8 @@
 COMPOSE ?= docker compose
+API_PROJECT ?= api/src/Services/ToyRobot.Api
+FRONTEND_DIR ?= frontEnd
 
-.PHONY: up down build rebuild logs ps check-token
+.PHONY: up down build rebuild logs ps check-token dev dev-api dev-frontend
 
 ifeq ($(OS),Windows_NT)
 
@@ -19,6 +21,13 @@ up: check-token
 	@echo Frontend: http://localhost:5173
 	@echo API:      http://localhost:5299
 
+## Run both services locally without Docker (API in a new window, frontend here)
+dev:
+	@echo Starting API in a new window...
+	start "ToyRobot API" cmd /c "dotnet run --project $(API_PROJECT)"
+	@echo Starting frontend (Ctrl+C to stop)...
+	cd $(FRONTEND_DIR) && npm install && npm run dev
+
 else
 
 ## Fail fast if the Artifactory token needed for the frontend build is missing
@@ -36,6 +45,14 @@ up: check-token
 	$(COMPOSE) up --build -d
 	@echo "Frontend: http://localhost:5173"
 	@echo "API:      http://localhost:5299"
+
+## Run both services locally without Docker (API in background, frontend in foreground)
+dev:
+	@echo "Starting API (background) and frontend..."
+	@trap 'kill $$API_PID 2>/dev/null' EXIT; \
+	dotnet run --project $(API_PROJECT) & \
+	API_PID=$$!; \
+	cd $(FRONTEND_DIR) && npm install && npm run dev
 
 endif
 
@@ -58,3 +75,11 @@ logs:
 ## Show container status
 ps:
 	$(COMPOSE) ps
+
+## Run only the API locally without Docker
+dev-api:
+	dotnet run --project $(API_PROJECT)
+
+## Run only the frontend dev server locally without Docker
+dev-frontend:
+	cd $(FRONTEND_DIR) && npm install && npm run dev

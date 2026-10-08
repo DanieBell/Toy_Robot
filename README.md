@@ -45,7 +45,29 @@ the backend CORS policy and the frontend's default API base URL.
 - `DEFAULT_DOCKER_REPO` (both Dockerfiles) — base-image registry, defaults to the
   Artifactory Docker repo.
 
-## Local development (without Docker)
+## Running without Docker
+
+If you don't have Artifactory Docker access, run both services directly on your host.
+This needs the .NET SDK and Node.js installed, and your machine's npm/NuGet already
+configured for the Artifactory package feeds (the standard local dev setup).
+
+```sh
+make dev           # run both: API + frontend dev server
+make dev-api       # run only the API
+make dev-frontend  # run only the frontend dev server
+```
+
+`make dev` starts the API alongside the frontend:
+
+- On Windows the API opens in its own terminal window; the frontend runs in the current
+  one. Close the API window to stop it.
+- On macOS/Linux the API runs in the background and is stopped when you Ctrl+C the
+  frontend.
+
+The frontend dev server runs on `http://localhost:5173` and the API on
+`http://localhost:5299`.
+
+### Manual (equivalent) steps
 
 ```sh
 # API
@@ -56,6 +78,3 @@ cd frontEnd
 npm install
 npm run dev
 ```
-
-The frontend dev server runs on `http://localhost:5173` and the API on
-`http://localhost:5299`.
